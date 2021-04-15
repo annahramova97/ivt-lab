@@ -78,11 +78,7 @@ public class GT4500 implements SpaceShip {
 
       case ALL:
         // try to fire both of the torpedo stores
-<<<<<<< HEAD
-        // CONFLICT INVOKING
-=======
-        // Invoke conflict
->>>>>>> B
+
         firingSuccess = primaryTorpedoStore.fire(1);
         wasPrimaryFiredLast = true;
         firingSuccess = secondaryTorpedoStore.fire(1);
