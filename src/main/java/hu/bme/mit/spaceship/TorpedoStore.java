@@ -1,18 +1,27 @@
 package hu.bme.mit.spaceship;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 * Class storing and managing the torpedoes of a ship
 *
 * (Deliberately contains bugs.)
 */
+
+
 public class TorpedoStore {
 
   // rate of failing to fire torpedos [0.0, 1.0]
   private double FAILURE_RATE = 0.0; //NOSONAR
 
   private int torpedoCount = 0;
+
+  private static final Logger LOGGER = Logger.getLogger(TorpedoStore.class.getName());
+
 
   public TorpedoStore(int numberOfTorpedos){
     this.torpedoCount = numberOfTorpedos;
@@ -28,21 +37,25 @@ public class TorpedoStore {
     }
   }
 
-  public boolean fire(int numberOfTorpedos){
+  public boolean fire(int numberOfTorpedos) {
     if(numberOfTorpedos < 1 || numberOfTorpedos > this.torpedoCount){
-      new IllegalArgumentException("numberOfTorpedos");
+      throw new IllegalArgumentException("numberOfTorpedos");
     }
 
     boolean success = false;
-
-    //TESTING COMMENT
     // simulate random overheating of the launcher bay which prevents firing
-    Random generator = new Random();
-    double r = generator.nextDouble();
+   
+    Random rand = new SecureRandom();
+    try {
+        rand = SecureRandom.getInstanceStrong();
+    } catch (NoSuchAlgorithmException e) {
+      LOGGER.log(Level.WARNING, "NoSuchAlgorithmException was thown", e);
+    }
+    double r = rand.nextDouble();
 
     if (r >= FAILURE_RATE) {
       // successful firing
-      this.torpedoCount =- numberOfTorpedos;
+      this.torpedoCount -= numberOfTorpedos;
       success = true;
     } else {
       // simulated failure
